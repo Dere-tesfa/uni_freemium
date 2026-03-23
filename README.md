@@ -75,21 +75,6 @@ uniexam-hub/
 └── README.md
 ```
 
-## API Endpoints
-
-| Method | Endpoint                   | Description              | Auth |
-|--------|----------------------------|--------------------------|------|
-| POST   | /api/auth/register         | Register new user        | ❌   |
-| POST   | /api/auth/login            | Login user               | ❌   |
-| GET    | /api/departments           | List departments         | ✅   |
-| GET    | /api/departments/:id       | Department detail        | ✅   |
-| GET    | /api/exams                 | List exams               | ✅   |
-| GET    | /api/exams/:id             | Exam detail              | ✅   |
-| POST   | /api/exams/:id/submit      | Submit exam answers      | ✅   |
-| GET    | /api/dashboard/my-exams    | User's exam history      | ✅   |
-| POST   | /api/payments/checkout     | Create payment session   | ✅   |
-| GET    | /api/leaderboard           | Global leaderboard       | ✅   |
-
 ## Architecture Principles
 
 - **Feature-based** frontend structure — each feature is self-contained
