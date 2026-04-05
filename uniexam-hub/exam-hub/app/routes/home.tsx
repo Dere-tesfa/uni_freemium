@@ -2,7 +2,14 @@ import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Badge } from "../components/ui/badge"
 import { Link } from "react-router"
-import { BookOpen, Sparkles, Trophy, ArrowRight, ShieldCheck, GraduationCap } from "lucide-react"
+import { 
+  BookOpen, 
+  Sparkles, 
+  Trophy, 
+  ArrowRight, 
+  ShieldCheck, 
+  GraduationCap 
+} from "lucide-react"
 
 export default function Home() {
   return (
@@ -10,9 +17,11 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative py-16 px-4 md:py-32 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container mx-auto text-center relative z-10">
-          <Badge variant="secondary" className="mb-6 px-4 py-1.5 rounded-full text-sm font-semibold animate-in fade-in slide-in-from-bottom-3">
-            ✨ Revolutionizing Exam Prep
-          </Badge>
+          {Badge && (
+            <Badge variant="secondary" className="mb-6 px-4 py-1.5 rounded-full text-sm font-semibold animate-in fade-in slide-in-from-bottom-3">
+              ✨ Revolutionizing Exam Prep
+            </Badge>
+          )}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-primary mb-6 text-balance">
             Master University Exams <br />
             <span className="text-foreground">with AI-Powered Insights</span>
@@ -23,7 +32,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/exams" className="w-full sm:w-auto">
               <Button size="lg" className="w-full h-14 px-10 text-lg font-bold gap-2">
-                Browse Exams <ArrowRight className="size-5" />
+                Browse Exams {ArrowRight && <ArrowRight className="size-5" />}
               </Button>
             </Link>
             <Link to="/auth/signup" className="w-full sm:w-auto">
@@ -35,13 +44,13 @@ export default function Home() {
           
           <div className="mt-16 flex flex-wrap justify-center gap-6 md:gap-12 opacity-70">
             <div className="flex items-center gap-2 font-semibold">
-              <ShieldCheck className="size-5 text-primary" /> Verified Resources
+              {ShieldCheck && <ShieldCheck className="size-5 text-primary" />} Verified Resources
             </div>
             <div className="flex items-center gap-2 font-semibold">
-              <GraduationCap className="size-5 text-primary" /> Top Universities
+              {GraduationCap && <GraduationCap className="size-5 text-primary" />} Top Universities
             </div>
             <div className="flex items-center gap-2 font-semibold">
-              <Sparkles className="size-5 text-primary" /> AI Explanations
+              {Sparkles && <Sparkles className="size-5 text-primary" />} AI Explanations
             </div>
           </div>
         </div>
@@ -59,7 +68,7 @@ export default function Home() {
             <Card className="border-none shadow-lg bg-card/50 backdrop-blur">
               <CardHeader>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <BookOpen className="size-6 text-primary" />
+                  {BookOpen && <BookOpen className="size-6 text-primary" />}
                 </div>
                 <CardTitle>Premium Exam Sheets</CardTitle>
               </CardHeader>
@@ -71,7 +80,7 @@ export default function Home() {
             <Card className="border-none shadow-lg bg-card/50 backdrop-blur">
               <CardHeader>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <Sparkles className="size-6 text-primary" />
+                  {Sparkles && <Sparkles className="size-6 text-primary" />}
                 </div>
                 <CardTitle>AI-Powered Feedback</CardTitle>
               </CardHeader>
@@ -83,7 +92,7 @@ export default function Home() {
             <Card className="border-none shadow-lg bg-card/50 backdrop-blur">
               <CardHeader>
                 <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <Trophy className="size-6 text-primary" />
+                  {Trophy && <Trophy className="size-6 text-primary" />}
                 </div>
                 <CardTitle>Gamified Learning</CardTitle>
               </CardHeader>
