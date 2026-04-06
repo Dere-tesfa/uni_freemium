@@ -37,7 +37,11 @@ export default function Exams() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {exams.map((exam) => (
-          <div key={exam.id} className="group flex flex-col p-6 rounded-2xl border bg-card shadow-sm hover:border-primary/40 transition-all hover:shadow-xl cursor-pointer">
+          <Link
+            key={exam.id}
+            to={`/exams/${exam.id}`}
+            className="group flex flex-col p-6 rounded-2xl border bg-card shadow-sm hover:border-primary/40 transition-all hover:shadow-xl hover:-translate-y-0.5"
+          >
             <div className="flex justify-between items-start mb-6">
               <span className="px-3 py-1 bg-secondary text-secondary-foreground text-xs font-bold rounded-full uppercase tracking-wider">
                 {exam.dept}
@@ -53,11 +57,12 @@ export default function Exams() {
             <div className="mt-auto pt-6 border-t flex items-center justify-between text-xs font-medium text-muted-foreground">
               <div className="flex items-center gap-1">
                 <span className="text-yellow-500">★</span>
-                <span className="text-foreground">{exam.rating}</span>
+                <span className="text-foreground font-bold">{exam.rating}</span>
+                <span className="ml-1">· {exam.purchases} Purchases</span>
               </div>
-              <span>{exam.purchases} Purchases</span>
+              <span className="text-primary font-semibold group-hover:underline">View Details →</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
