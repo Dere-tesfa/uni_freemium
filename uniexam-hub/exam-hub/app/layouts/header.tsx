@@ -1,9 +1,9 @@
 import { Link } from "react-router"
-import { Button } from "../ui/button"
+import { Button } from "../components/ui/button"
 import { Moon, Sun, Menu, X } from "lucide-react"
-import { useUIStore } from "../../stores/use-ui-store"
+import { useUIStore } from "../store/use-ui-store"
 import { useState } from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "../lib/utils"
 
 export function Header() {
   const { theme, toggleTheme } = useUIStore()

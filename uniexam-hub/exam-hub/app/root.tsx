@@ -11,7 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { useUIStore } from "./stores/use-ui-store";
+import { useUIStore } from "./store/use-ui-store";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,16 +36,9 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const theme = useUIStore((state) => state.theme);
-  // Prevent hydration mismatch: localStorage-persisted theme is only
-  // available on the client. Render without the class on first pass so
-  // the server and client HTML match, then apply the real class after mount.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  
   return (
-    <html lang="en" className={mounted && theme === "dark" ? "dark" : ""}>
+    <html lang="en" className={theme === "dark" ? "dark" : ""}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
