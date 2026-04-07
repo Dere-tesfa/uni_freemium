@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  phone         String   @unique
+  email         String?  @unique
+  password_hash String
+  role          String   @default("student") // "student" or "admin"
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  purchases Purchase[]
+  progress  UserProgress[]
+  bookmarks Bookmark[]
+}
+
+model Sheet {
+  id           String   @id @default(uuid())
+  title        String
+  course_code  String
+  university   String
+  department   String
+  year         Int
+  exam_type    String   @default("mid") // "mid", "final", "quiz", "assignment"
+  semester     String   @default("1") // "1" or "2"
+  price        Float    @default(0)
+  is_published Boolean  @default(false)
+  description  String?
+  image_url    String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  questions Question[]
+  purchases Purchase[]
+  progress  UserProgress[]
+}
+
+model Question {
+  id             String   @id @default(uuid())
+  sheet_id       String
+  question_text  String
+  image_url      String?
+  options        Json // [{label: "A", text: "..."}]
+  correct_answer String // "A", "B", "C", "D"
+  explanation    String
+  lesson_content String
+  order          Int      @default(0)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  sheet     Sheet          @relation(fields: [sheet_id], references: [id], onDelete: Cascade)
+  progress  UserProgress[]
+  bookmarks Bookmark[]
+}
+
+model Purchase {
+  id               String    @id @default(uuid())
+  user_id          String
+  sheet_id         String
+  status           String    @default("pending") // "pending", "approved", "rejected"
+  screenshot_url   String?
+  amount           Float
+  transaction_id   String?   // TeleBirr transaction ID
+  payer_phone      String?   // Phone number used for payment
+  rejection_reason String?
+  created_at       DateTime  @default(now())
+  approved_at      DateTime?
+  rejected_at      DateTime?
+
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  sheet Sheet @relation(fields: [sheet_id], references: [id], onDelete: Cascade)
+}
+
+model Setting {
+  key         String   @id
+  value       String
+  description String?
+  updated_at  DateTime @updatedAt
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  user_id     String
+  question_id String
+  sheet_id    String
+  is_correct  Boolean
+  user_answer String
+  created_at  DateTime @default(now())
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  sheet    Sheet    @relation(fields: [sheet_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, question_id])
+}
+
+model Bookmark {
+  id          String   @id @default(uuid())
+  user_id     String
+  question_id String
+  created_at  DateTime @default(now())
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, question_id])
+}
