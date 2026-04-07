@@ -1,10 +1,17 @@
 // Admin Login Page
 
 import { useState } from "react";
+import { redirect } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { authService } from "~/services";
+import { seedAdminUser } from "~/lib/seed-admin";
+
+export function loader() {
+  seedAdminUser().catch(console.error);
+  return null;
+}
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -21,13 +28,15 @@ export async function action({ request }: { request: Request }) {
       };
     }
 
-    // In production, store token in secure cookie/session
-    // For now, store in localStorage (client-side)
-    return {
-      success: true,
-      token: result.token,
-      user: result.user,
-    };
+    // Create session with token
+    const session = await import("~/lib/session.server").then(m => m.getSession());
+    session.set("token", result.token);
+
+    return redirect("/admin", {
+      headers: {
+        "Set-Cookie": await import("~/lib/session.server").then(m => m.commitSession(session)),
+      },
+    });
   } catch (error: any) {
     return {
       error: error.message || "Login failed",
@@ -38,16 +47,6 @@ export async function action({ request }: { request: Request }) {
 export default function AdminLogin({ actionData }: { actionData?: any }) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-
-  // If login successful, redirect to admin dashboard
-  if (actionData?.success) {
-    // Store token in localStorage
-    if (typeof window !== "undefined") {
-      localStorage.setItem("admin_token", actionData.token);
-      localStorage.setItem("admin_user", JSON.stringify(actionData.user));
-      window.location.href = "/admin";
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-background p-4">

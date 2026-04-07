@@ -268,7 +268,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
 ## 🛠️ Middleware Utilities
 
-**File:** [`../lib/middleware.ts`](../lib/middleware.ts)
+**File:** [`../lib/middleware.server.ts`](../lib/middleware.server.ts)
 
 Helper functions for authentication, validation, and response handling in loaders and actions.
 
@@ -287,13 +287,13 @@ import {
   validateRequired, // Validate required fields
   getPaginationParams, // Get pagination from query
   checkRateLimit, // Simple rate limiting
-} from "~/lib/middleware";
+} from "~/lib/middleware.server";
 ```
 
 ### Usage in Routes:
 
 ```typescript
-import { requireAuth, getJsonBody, errorResponse } from "~/lib/middleware";
+import { requireAuth, getJsonBody, errorResponse } from "~/lib/middleware.server";
 
 export async function action({ request }: Route.ActionArgs) {
   try {
@@ -393,7 +393,7 @@ See [`../lib/types.ts`](../lib/types.ts) for complete type definitions.
 ```typescript
 // app/routes/api/auth/login.ts
 import { authService } from "~/services";
-import { jsonResponse, errorResponse } from "~/lib/middleware";
+import { jsonResponse, errorResponse } from "~/lib/middleware.server";
 
 export async function action({ request }: Route.ActionArgs) {
   try {
@@ -411,7 +411,7 @@ export async function action({ request }: Route.ActionArgs) {
 ```typescript
 // app/routes/sheets/$id.tsx
 import { sheetService } from "~/services";
-import { getUserId } from "~/lib/middleware";
+import { getUserId } from "~/lib/middleware.server";
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const userId = await getUserId(request);
@@ -424,7 +424,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
 ```typescript
 // app/routes/admin/dashboard.tsx
-import { requireAdmin } from "~/lib/middleware";
+import { requireAdmin } from "~/lib/middleware.server";
 import { paymentService } from "~/services";
 
 export async function loader({ request }: Route.LoaderArgs) {

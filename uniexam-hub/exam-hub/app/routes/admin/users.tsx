@@ -1,11 +1,5 @@
 // Admin Users Management Route
 
-import {
-  requireAdmin,
-  getFormData,
-  jsonResponse,
-  errorResponse,
-} from "~/lib/middleware";
 import { userService } from "~/services";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
@@ -31,7 +25,7 @@ export async function loader({ request }: { request: Request }) {
 
 // Action: Handle user operations
 export async function action({ request }: { request: Request }) {
-  // Authentication check removed for testing
+  const { getFormData, jsonResponse, errorResponse } = await import("~/lib/middleware.server");
 
   try {
     const formData = await getFormData(request);

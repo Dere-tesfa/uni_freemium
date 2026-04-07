@@ -8,6 +8,8 @@ export { questionService } from './question.service';
 export { paymentService } from './payment.service';
 export { settingsService } from './settings.service';
 export { examService, ExamService } from './exam.service';
+export { fileService } from './file.service';
+export { aiService } from './ai.service';
 
 // Re-export types for convenience
 export type {

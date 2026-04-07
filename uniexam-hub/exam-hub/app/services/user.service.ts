@@ -1,10 +1,17 @@
-// User Service
-// Server-side only - handles user management operations
-
+import bcrypt from 'bcrypt';
 import { db } from '../lib/db';
 import type { User } from '../lib/types';
 
 class UserService {
+  /**
+   * Reset user password (admin only)
+   */
+  async resetPassword(userId: string, newPassword: string): Promise<boolean> {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updated = await db.updateUser(userId, { password_hash: hashedPassword });
+    return !!updated;
+  }
+
   /**
    * Get all users (admin only)
    */

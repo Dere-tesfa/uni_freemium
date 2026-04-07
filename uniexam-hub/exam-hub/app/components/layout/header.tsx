@@ -4,8 +4,13 @@ import { Moon, Sun, Menu, X } from "lucide-react"
 import { useUIStore } from "../../stores/use-ui-store"
 import { useState } from "react"
 import { cn } from "../../lib/utils"
+import type { User } from "../../lib/types"
 
-export function Header() {
+interface HeaderProps {
+  user?: Omit<User, 'password_hash'> | null
+}
+
+export function Header({ user }: HeaderProps) {
   const { theme, toggleTheme } = useUIStore()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -49,12 +54,29 @@ export function Header() {
           </Button>
 
           <div className="hidden md:flex items-center gap-2">
-            <Link to="/auth/login">
-              <Button variant="ghost" size="sm">Log in</Button>
-            </Link>
-            <Link to="/auth/signup">
-              <Button size="sm">Get Started</Button>
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col text-right">
+                  <span className="text-xs font-bold text-foreground">{user.email || user.phone}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase font-black">{user.role}</span>
+                </div>
+                <div className="size-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary">
+                  {(user.email || user.phone).charAt(0).toUpperCase()}
+                </div>
+                <form action="/auth/logout" method="post">
+                  <Button variant="ghost" size="sm">Log out</Button>
+                </form>
+              </div>
+            ) : (
+              <>
+                <Link to="/auth/login">
+                  <Button variant="ghost" size="sm">Log in</Button>
+                </Link>
+                <Link to="/auth/signup">
+                  <Button size="sm">Get Started</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           <Button 
@@ -86,12 +108,31 @@ export function Header() {
           ))}
           <hr className="my-2" />
           <div className="flex flex-col gap-2 p-2">
-            <Link to="/auth/login" onClick={() => setIsMenuOpen(false)}>
-              <Button variant="outline" className="w-full">Log in</Button>
-            </Link>
-            <Link to="/auth/signup" onClick={() => setIsMenuOpen(false)}>
-              <Button className="w-full">Get Started</Button>
-            </Link>
+            {user ? (
+              <div className="flex flex-col gap-3 p-2">
+                <div className="flex items-center gap-3">
+                  <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+                    {(user.email || user.phone).charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold">{user.email || user.phone}</span>
+                    <span className="text-xs text-muted-foreground uppercase">{user.role}</span>
+                  </div>
+                </div>
+                <form action="/auth/logout" method="post">
+                  <Button variant="outline" className="w-full">Log out</Button>
+                </form>
+              </div>
+            ) : (
+              <>
+                <Link to="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">Log in</Button>
+                </Link>
+                <Link to="/auth/signup" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full">Get Started</Button>
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>
