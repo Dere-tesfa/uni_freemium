@@ -63,7 +63,7 @@ class SettingsService {
     return bankSettings.map(s => ({
       name: this.formatBankName(s.key),
       account_number: s.value,
-      description: s.description ?? undefined,
+      description: s.description,
     }));
   }
 

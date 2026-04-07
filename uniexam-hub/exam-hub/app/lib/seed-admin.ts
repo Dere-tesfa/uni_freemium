@@ -14,16 +14,12 @@ export async function seedAdminUser() {
     return existing;
   }
 
-  // Hash password properly using bcrypt
-  const bcrypt = await import('bcrypt');
-  const passwordHash = await bcrypt.hash('admin123', 10);
-
   // Create admin user
   const admin: User = {
     id: `admin_${Date.now()}`,
     phone: adminPhone,
     email: 'admin@uniexam.com',
-    password_hash: passwordHash,
+    password_hash: 'hashed_admin123', // Password: admin123
     role: 'admin',
     created_at: new Date(),
     updated_at: new Date(),

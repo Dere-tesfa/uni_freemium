@@ -1,5 +1,11 @@
 // Admin Sheets Management Route
 
+import {
+  requireAdmin,
+  getFormData,
+  jsonResponse,
+  errorResponse,
+} from "~/lib/middleware";
 import { sheetService } from "~/services";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
@@ -8,7 +14,6 @@ import { Input } from "~/components/ui/input";
 
 // Loader: Fetch all sheets
 export async function loader({ request }: { request: Request }) {
-  const { getFormData, jsonResponse } = await import("~/lib/middleware.server");
   // Authentication check removed for testing
 
   const url = new URL(request.url);
@@ -35,7 +40,7 @@ export async function loader({ request }: { request: Request }) {
 
 // Action: Handle sheet operations
 export async function action({ request }: { request: Request }) {
-  const { getFormData, jsonResponse, errorResponse } = await import("~/lib/middleware.server");
+  // Authentication check removed for testing
 
   try {
     const formData = await getFormData(request);
@@ -65,10 +70,7 @@ export async function action({ request }: { request: Request }) {
       const department = formData.get("department") as string;
       const year = parseInt(formData.get("year") as string);
       const price = parseInt(formData.get("price") as string);
-      const examType = formData.get("examType") as string;
-      const semester = formData.get("semester") as string;
       const description = formData.get("description") as string;
-      const imageUrl = formData.get("imageUrl") as string;
 
       const sheet = await sheetService.createSheet({
         title,
@@ -76,11 +78,8 @@ export async function action({ request }: { request: Request }) {
         university,
         department,
         year,
-        exam_type: examType,
-        semester,
         price,
         description,
-        image_url: imageUrl || null,
         is_published: false,
       });
 
@@ -388,27 +387,10 @@ export default function AdminSheets({
                   <Input type="number" name="year" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Price (ETB)</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Price (ETB)
+                  </label>
                   <Input type="number" name="price" defaultValue="0" required />
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Exam Type</label>
-                  <select name="examType" className="w-full rounded-md border px-3 py-2" required>
-                    <option value="mid">Mid Exam</option>
-                    <option value="final">Final Exam</option>
-                    <option value="quiz">Quiz</option>
-                    <option value="assignment">Assignment</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Semester</label>
-                  <select name="semester" className="w-full rounded-md border px-3 py-2" required>
-                    <option value="1">1st Semester</option>
-                    <option value="2">2nd Semester</option>
-                  </select>
                 </div>
               </div>
 
@@ -421,13 +403,6 @@ export default function AdminSheets({
                   className="w-full rounded-md border px-3 py-2"
                   rows={3}
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Image URL (optional)
-                </label>
-                <Input type="url" name="imageUrl" placeholder="https://example.com/image.jpg" />
               </div>
 
               <Button type="submit" className="w-full">

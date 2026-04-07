@@ -8,7 +8,7 @@ export type PaymentStatus = 'pending' | 'approved' | 'rejected';
 export interface User {
   id: string;
   phone: string;
-  email?: string | null;
+  email?: string;
   password_hash: string;
   role: UserRole;
   created_at: Date;
@@ -22,12 +22,9 @@ export interface Sheet {
   university: string;
   department: string;
   year: number;
-  exam_type: string; // "mid", "final", "quiz", "assignment"
-  semester: string; // "1" or "2"
   price: number; // 0 for free sheets
   is_published: boolean;
-  description?: string | null;
-  image_url?: string | null;
+  description?: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -36,7 +33,7 @@ export interface Question {
   id: string;
   sheet_id: string;
   question_text: string;
-  image_url?: string | null;
+  image_url?: string;
   options: QuestionOption[];
   correct_answer: string; // A, B, C, or D
   explanation: string;
@@ -56,20 +53,18 @@ export interface Purchase {
   user_id: string;
   sheet_id: string;
   status: PaymentStatus;
-  screenshot_url?: string | null;
+  screenshot_url?: string;
   amount: number;
-  transaction_id?: string | null;
-  payer_phone?: string | null;
-  rejection_reason?: string | null;
+  rejection_reason?: string;
   created_at: Date;
-  approved_at?: Date | null;
-  rejected_at?: Date | null;
+  approved_at?: Date;
+  rejected_at?: Date;
 }
 
 export interface Setting {
   key: string;
   value: string;
-  description?: string | null;
+  description?: string;
   updated_at: Date;
 }
 
@@ -93,7 +88,7 @@ export interface Bookmark {
 // DTOs (Data Transfer Objects)
 export interface CreateUserDTO {
   phone: string;
-  email?: string | null;
+  email?: string;
   password: string;
   role?: UserRole;
 }
@@ -109,18 +104,15 @@ export interface CreateSheetDTO {
   university: string;
   department: string;
   year: number;
-  exam_type?: string; // "mid", "final", "quiz", "assignment"
-  semester?: string; // "1" or "2"
   price: number;
-  description?: string | null;
-  image_url?: string | null;
+  description?: string;
   is_published?: boolean;
 }
 
 export interface CreateQuestionDTO {
   sheet_id: string;
   question_text: string;
-  image_url?: string | null;
+  image_url?: string;
   options: QuestionOption[];
   correct_answer: string;
   explanation: string;
@@ -132,8 +124,6 @@ export interface CreatePurchaseDTO {
   user_id: string;
   sheet_id: string;
   screenshot_url?: string;
-  transaction_id?: string;
-  payer_phone?: string;
   amount: number;
 }
 

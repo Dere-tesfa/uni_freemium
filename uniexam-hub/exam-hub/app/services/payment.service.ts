@@ -2,19 +2,17 @@
 // Server-side only - handles manual payment verification system
 
 import { db } from '../lib/db';
-import { notificationService } from './notification.service';
 import type { 
   Purchase, 
   CreatePurchaseDTO, 
-  UpdatePurchaseStatusDTO,
-  PaymentStatus 
+  UpdatePurchaseStatusDTO 
 } from '../lib/types';
 
 class PaymentService {
   /**
    * Create a new payment request
    */
-  async createPaymentRequest(data: CreatePurchaseDTO & { status?: PaymentStatus }): Promise<Purchase> {
+  async createPaymentRequest(data: CreatePurchaseDTO): Promise<Purchase> {
     // Check if sheet exists
     const sheet = await db.findSheetById(data.sheet_id);
     if (!sheet) {
@@ -42,29 +40,17 @@ class PaymentService {
       throw new Error(`Payment amount (${data.amount} ETB) does not match sheet price (${sheet.price} ETB)`);
     }
 
-    const status = data.status || 'pending';
-
     const purchase: Purchase = {
       id: this.generateId(),
       user_id: data.user_id,
       sheet_id: data.sheet_id,
-      status: status,
+      status: 'pending',
       screenshot_url: data.screenshot_url,
-      transaction_id: data.transaction_id || null,
-      payer_phone: data.payer_phone || null,
       amount: data.amount,
       created_at: new Date(),
-      approved_at: status === 'approved' ? new Date() : undefined,
     };
 
-    const created = await db.createPurchase(purchase);
-
-    // If auto-approved, trigger notification
-    if (status === 'approved') {
-      await this.notifyUser(data.user_id, 'approved', data.sheet_id);
-    }
-
-    return created;
+    return await db.createPurchase(purchase);
   }
 
   /**
@@ -178,8 +164,8 @@ class PaymentService {
       throw new Error('Failed to update payment');
     }
 
-    // Send notification to user (email/SMS/in-app)
-    await this.notifyUser(payment.user_id, 'approved', payment.sheet_id);
+    // TODO: Send notification to user (email/SMS/in-app)
+    // await this.notifyUser(payment.user_id, 'approved', payment.sheet_id);
 
     return updated;
   }
@@ -214,8 +200,8 @@ class PaymentService {
       throw new Error('Failed to update payment');
     }
 
-    // Send notification to user with rejection reason
-    await this.notifyUser(payment.user_id, 'rejected', payment.sheet_id, reason);
+    // TODO: Send notification to user with rejection reason
+    // await this.notifyUser(payment.user_id, 'rejected', payment.sheet_id, reason);
 
     return updated;
   }
@@ -431,8 +417,8 @@ class PaymentService {
   }
 
   /**
-   * Implement notification system
-   * This sends notifications via email and SMS
+   * TODO: Implement notification system
+   * This would send notifications via email, SMS, or in-app
    */
   private async notifyUser(
     userId: string,
@@ -440,30 +426,13 @@ class PaymentService {
     sheetId: string,
     reason?: string
   ): Promise<void> {
-    try {
-      const user = await db.findUserById(userId);
-      const sheet = await db.findSheetById(sheetId);
-
-      if (!user || !sheet) return;
-
-      const message = status === 'approved' 
-        ? `Your payment for ${sheet.title} was approved! You now have full access.`
-        : `Your payment for ${sheet.title} was rejected. Reason: ${reason}`;
-
-      // Send SMS
-      await notificationService.sendSMS(user.phone, message);
-
-      // Send Email if available
-      if (user.email) {
-        if (status === 'approved') {
-          await notificationService.sendPurchaseConfirmation(user.email, sheet.title);
-        } else if (status === 'rejected' && reason) {
-          await notificationService.sendPurchaseRejection(user.email, sheet.title, reason);
-        }
-      }
-    } catch (error) {
-      console.error('Error sending notification:', error);
-    }
+    // Placeholder for notification logic
+    // In production, integrate with:
+    // - Email service (SendGrid, AWS SES)
+    // - SMS service (Twilio, African SMS providers)
+    // - Push notifications
+    // - Telegram bot
+    console.log(`Notify user ${userId}: Payment ${status} for sheet ${sheetId}`, reason);
   }
 }
 

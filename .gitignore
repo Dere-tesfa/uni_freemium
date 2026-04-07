@@ -13,7 +13,7 @@ dist/
 build/
 .next/
 out/
-.kilo/
+
 # Logs
 logs/
 *.log
