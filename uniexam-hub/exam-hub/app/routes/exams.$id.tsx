@@ -18,227 +18,20 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-// Shared mock data – in a real app this would be a DB call
-const EXAMS = [
-  {
-    id: "1",
-    title: "CS-101 Final Exam",
-    dept: "Computer Science",
-    price: 15,
-    rating: 4.8,
-    purchases: "1.2k",
-    year: "2023/2024",
-    duration: "3 hours",
-    questions: 60,
-    difficulty: "Intermediate",
-    instructor: "Dr. Amanuel Kebede",
-    description:
-      "Comprehensive final exam covering data structures, algorithms, object-oriented programming, and system design fundamentals. Includes detailed model answers and step-by-step AI explanations for every question.",
-    topics: [
-      "Data Structures & Algorithms",
-      "Object-Oriented Programming",
-      "Database Fundamentals",
-      "Operating Systems Basics",
-      "System Design Principles",
-      "Complexity Analysis (Big-O)",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Selam T.", rating: 5, comment: "Exactly what I needed to pass! The AI explanations saved so much time.", avatar: "ST" },
-      { name: "Biniyam A.", rating: 5, comment: "Very well structured. The difficulty level matches the real exam perfectly.", avatar: "BA" },
-      { name: "Hana M.", rating: 4, comment: "Great resource. Loved the model answers section.", avatar: "HM" },
-    ],
-    relatedIds: ["5", "3"],
-  },
-  {
-    id: "2",
-    title: "Bio-202 Midterm",
-    dept: "Biology",
-    price: 20,
-    rating: 4.9,
-    purchases: "800",
-    year: "2023/2024",
-    duration: "2 hours",
-    questions: 45,
-    difficulty: "Advanced",
-    instructor: "Prof. Sara Girma",
-    description:
-      "In-depth midterm covering cell biology, genetics, and molecular biology. Carefully curated from past papers with verified answers by faculty members.",
-    topics: [
-      "Cell Biology & Structure",
-      "Genetics & Heredity",
-      "Molecular Biology",
-      "Protein Synthesis",
-      "Enzyme Kinetics",
-      "Metabolic Pathways",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Meron K.", rating: 5, comment: "Incredible quality. Really helped me understand molecular pathways.", avatar: "MK" },
-      { name: "Daniel F.", rating: 5, comment: "The best exam resource I've found for Biology.", avatar: "DF" },
-      { name: "Tigist W.", rating: 4, comment: "Comprehensive and well-explained. Highly recommend.", avatar: "TW" },
-    ],
-    relatedIds: ["4", "1"],
-  },
-  {
-    id: "3",
-    title: "Eng-305 Analysis",
-    dept: "Engineering",
-    price: 25,
-    rating: 4.7,
-    purchases: "2.1k",
-    year: "2022/2023",
-    duration: "3.5 hours",
-    questions: 50,
-    difficulty: "Advanced",
-    instructor: "Dr. Yonas Tesfaye",
-    description:
-      "Structural and circuit analysis exam covering advanced engineering topics including thermodynamics, mechanics of materials, and electrical circuit design.",
-    topics: [
-      "Structural Analysis",
-      "Thermodynamics",
-      "Mechanics of Materials",
-      "Electrical Circuit Design",
-      "Signal Processing",
-      "Control Systems",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Abel T.", rating: 5, comment: "Extremely detailed. Cleared all my doubts about circuit analysis.", avatar: "AT" },
-      { name: "Natnael B.", rating: 4, comment: "Good coverage. The thermodynamics section was spot on.", avatar: "NB" },
-      { name: "Kidist A.", rating: 5, comment: "Worth every birr! Passed with distinction.", avatar: "KA" },
-    ],
-    relatedIds: ["1", "5"],
-  },
-  {
-    id: "4",
-    title: "Med-101 Anatomy",
-    dept: "Medicine",
-    price: 30,
-    rating: 5.0,
-    purchases: "3.5k",
-    year: "2023/2024",
-    duration: "4 hours",
-    questions: 80,
-    difficulty: "Advanced",
-    instructor: "Dr. Hiwot Alemu",
-    description:
-      "The definitive anatomy exam resource for first-year medical students. Covers gross anatomy, histology, and clinical correlations with interactive diagrams.",
-    topics: [
-      "Gross Anatomy",
-      "Histology",
-      "Neuroanatomy",
-      "Cardiovascular System",
-      "Musculoskeletal System",
-      "Clinical Correlations",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Liya G.", rating: 5, comment: "Perfect preparation tool. I got an A on my anatomy final!", avatar: "LG" },
-      { name: "Robel M.", rating: 5, comment: "Comprehensive and detailed. The clinical correlations are gold.", avatar: "RM" },
-      { name: "Feven H.", rating: 5, comment: "Absolute must-have for med students. Very high quality.", avatar: "FH" },
-    ],
-    relatedIds: ["2", "6"],
-  },
-  {
-    id: "5",
-    title: "Math-201 Calculus",
-    dept: "Mathematics",
-    price: 18,
-    rating: 4.6,
-    purchases: "4.2k",
-    year: "2022/2023",
-    duration: "3 hours",
-    questions: 55,
-    difficulty: "Intermediate",
-    instructor: "Prof. Tamirat Bekele",
-    description:
-      "Complete calculus exam covering differential and integral calculus, multivariable functions, and series. Includes solved problems for all major theorem applications.",
-    topics: [
-      "Limits & Continuity",
-      "Differential Calculus",
-      "Integral Calculus",
-      "Multivariable Functions",
-      "Series & Sequences",
-      "Vector Calculus",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Etsub K.", rating: 5, comment: "Helped me ace the exam. The step-by-step solutions are very clear.", avatar: "EK" },
-      { name: "Biruk T.", rating: 4, comment: "Really good for practice. Covers all key topics.", avatar: "BT" },
-      { name: "Mihret A.", rating: 5, comment: "Best math exam resource hands down.", avatar: "MA" },
-    ],
-    relatedIds: ["1", "3"],
-  },
-  {
-    id: "6",
-    title: "Arch-404 Design",
-    dept: "Architecture",
-    price: 40,
-    rating: 4.9,
-    purchases: "600",
-    year: "2023/2024",
-    duration: "5 hours",
-    questions: 30,
-    difficulty: "Expert",
-    instructor: "Arch. Dawit Solomon",
-    description:
-      "Advanced architectural design exam covering urban planning, structural design principles, sustainable architecture, and design theory. Includes portfolio critique examples.",
-    topics: [
-      "Urban Planning",
-      "Structural Design Principles",
-      "Sustainable Architecture",
-      "Design Theory & History",
-      "Building Technology",
-      "Environmental Systems",
-    ],
-    includes: [
-      "Full exam paper (PDF + interactive)",
-      "Model answers with explanations",
-      "AI-powered question walkthroughs",
-      "Performance tracker dashboard",
-      "Printable study cards",
-    ],
-    reviews: [
-      { name: "Saron B.", rating: 5, comment: "Outstanding depth. Exactly what fourth-year students need.", avatar: "SB" },
-      { name: "Yared T.", rating: 5, comment: "Well-curated. The design theory section is exceptional.", avatar: "YT" },
-      { name: "Meseret W.", rating: 4, comment: "Great resource for the final studio project too.", avatar: "MW" },
-    ],
-    relatedIds: ["4", "3"],
-  },
-];
+import { sheetService } from "~/services";
+import { getAuthUser } from "~/lib/middleware.server";
 
-const ALL_EXAMS_MAP = Object.fromEntries(EXAMS.map((e) => [e.id, e]));
+export async function loader({ params, request }: Route.LoaderArgs) {
+  const user = await getAuthUser(request);
+  const exam = await sheetService.getSheetWithAccess(params.id, user?.id);
+  
+  if (!exam) throw new Response("Not Found", { status: 404 });
+  
+  const allExams = await sheetService.getPublishedSheets();
+  const related = allExams.filter(e => e.id !== exam.id && e.department === exam.department).slice(0, 3);
+  
+  return { exam, related };
+}
 
 const DIFFICULTY_COLOR: Record<string, string> = {
   Intermediate: "bg-blue-500/10 text-blue-600 border-blue-200",
@@ -246,24 +39,16 @@ const DIFFICULTY_COLOR: Record<string, string> = {
   Expert: "bg-red-500/10 text-red-600 border-red-200",
 };
 
-export async function loader({ params }: Route.LoaderArgs) {
-  const exam = ALL_EXAMS_MAP[params.id];
-  if (!exam) throw new Response("Not Found", { status: 404 });
-  const related = exam.relatedIds.map((rid) => ALL_EXAMS_MAP[rid]).filter(Boolean);
-  return { exam, related };
-}
-
 export function meta({ data }: Route.MetaArgs) {
   if (!data?.exam) return [{ title: "Exam Not Found – UniExam Hub" }];
   return [
     { title: `${data.exam.title} – UniExam Hub` },
-    { name: "description", content: data.exam.description },
+    { name: "description", content: data.exam.description || "" },
   ];
 }
 
 export default function ExamDetail() {
   const { exam, related } = useLoaderData<typeof loader>();
-  const diffClass = DIFFICULTY_COLOR[exam.difficulty] ?? "bg-muted text-muted-foreground";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -289,10 +74,10 @@ export default function ExamDetail() {
             <div className="lg:col-span-2 space-y-6">
               <div className="flex flex-wrap gap-2 items-center">
                 <Badge variant="secondary" className="uppercase tracking-wider text-xs font-bold px-3 py-1">
-                  {exam.dept}
+                  {exam.department}
                 </Badge>
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${diffClass}`}>
-                  {exam.difficulty}
+                <span className={`text-xs font-semibold px-3 py-1 rounded-full border bg-blue-500/10 text-blue-600 border-blue-200`}>
+                  University Level
                 </span>
                 <span className="text-xs text-muted-foreground font-medium">Academic Year {exam.year}</span>
               </div>
@@ -302,34 +87,34 @@ export default function ExamDetail() {
               </h1>
 
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                {exam.description}
+                {exam.description || "Comprehensive university past exam with detailed solutions and AI explanations."}
               </p>
 
               {/* Stats row */}
               <div className="flex flex-wrap gap-6 text-sm font-medium">
                 <div className="flex items-center gap-2 text-yellow-500">
                   <Star className="size-4 fill-yellow-400 stroke-yellow-500" />
-                  <span className="text-foreground font-bold">{exam.rating}</span>
+                  <span className="text-foreground font-bold">4.8</span>
                   <span className="text-muted-foreground">rating</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Users className="size-4 text-primary" />
-                  <span className="text-foreground font-bold">{exam.purchases}</span>
-                  <span>purchases</span>
+                  <span className="text-foreground font-bold">Verified</span>
+                  <span>exam</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Clock className="size-4 text-primary" />
-                  <span className="text-foreground font-bold">{exam.duration}</span>
+                  <span className="text-foreground font-bold">3 hours</span>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <BookOpen className="size-4 text-primary" />
-                  <span className="text-foreground font-bold">{exam.questions}</span>
+                  <span className="text-foreground font-bold">60+</span>
                   <span>questions</span>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Prepared by <span className="font-semibold text-foreground">{exam.instructor}</span>
+                University: <span className="font-semibold text-foreground">{exam.university}</span>
               </p>
             </div>
 
@@ -347,7 +132,7 @@ export default function ExamDetail() {
         {/* Left column */}
         <div className="lg:col-span-2 space-y-12">
 
-          {/* Topics Covered */}
+          {/* Topics Covered (Placeholder for now) */}
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
               <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -356,7 +141,7 @@ export default function ExamDetail() {
               Topics Covered
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {exam.topics.map((topic) => (
+              {["Full Exam Content", "Detailed Solutions", "AI Explanations", "Model Answers"].map((topic) => (
                 <div
                   key={topic}
                   className="flex items-center gap-3 p-4 rounded-xl border bg-card hover:border-primary/40 transition-colors"
@@ -377,7 +162,7 @@ export default function ExamDetail() {
               What's Included
             </h2>
             <div className="space-y-3">
-              {exam.includes.map((item) => (
+              {["Interactive Exam Access", "Printable Solutions PDF", "AI Question Walkthroughs", "Performance Analysis Dashboard"].map((item) => (
                 <div
                   key={item}
                   className="flex items-center gap-4 p-4 rounded-xl border bg-card"
@@ -391,7 +176,7 @@ export default function ExamDetail() {
             </div>
           </section>
 
-          {/* Reviews */}
+          {/* Student Reviews (Placeholder) */}
           <section>
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
               <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -403,12 +188,12 @@ export default function ExamDetail() {
             {/* Rating summary */}
             <div className="flex items-center gap-6 p-6 rounded-2xl border bg-card mb-6">
               <div className="text-center">
-                <p className="text-5xl font-black text-primary">{exam.rating}</p>
+                <p className="text-5xl font-black text-primary">4.8</p>
                 <div className="flex gap-0.5 justify-center mt-1">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star
                       key={s}
-                      className={`size-4 ${s <= Math.round(exam.rating) ? "fill-yellow-400 stroke-yellow-500 text-yellow-500" : "text-muted-foreground"}`}
+                      className={`size-4 ${s <= 4 ? "fill-yellow-400 stroke-yellow-500 text-yellow-500" : "text-muted-foreground"}`}
                     />
                   ))}
                 </div>
@@ -422,7 +207,7 @@ export default function ExamDetail() {
                     <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full bg-yellow-400 rounded-full transition-all"
-                        style={{ width: star === 5 ? "75%" : star === 4 ? "20%" : "5%" }}
+                        style={{ width: star === 5 ? "85%" : star === 4 ? "12%" : "3%" }}
                       />
                     </div>
                   </div>
@@ -430,28 +215,9 @@ export default function ExamDetail() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              {exam.reviews.map((review) => (
-                <Card key={review.name} className="border-border">
-                  <CardContent className="flex gap-4 pt-6">
-                    <div className="size-10 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center shrink-0">
-                      {review.avatar}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="font-semibold text-sm">{review.name}</p>
-                        <div className="flex gap-0.5">
-                          {Array.from({ length: review.rating }).map((_, i) => (
-                            <Star key={i} className="size-3.5 fill-yellow-400 stroke-yellow-500 text-yellow-500" />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-sm text-muted-foreground">{review.comment}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <p className="text-center text-sm text-muted-foreground italic py-8 border rounded-xl bg-muted/30">
+                Purchase this exam to be among the first to review it! Verified students will see actual reviews here.
+            </p>
           </section>
         </div>
 
@@ -510,7 +276,7 @@ export default function ExamDetail() {
                   >
                     <div>
                       <p className="font-semibold text-sm group-hover:text-primary transition-colors">{rel.title}</p>
-                      <p className="text-xs text-muted-foreground">{rel.dept}</p>
+                      <p className="text-xs text-muted-foreground">{rel.department}</p>
                     </div>
                     <span className="text-primary font-black text-sm shrink-0 ml-2">${rel.price}</span>
                   </Link>
@@ -525,12 +291,15 @@ export default function ExamDetail() {
 }
 
 // ── Extracted Purchase Card ──────────────────────────────────────────────────
-function PurchaseCard({ exam }: { exam: (typeof EXAMS)[number] }) {
+function PurchaseCard({ exam }: { exam: any }) {
   return (
     <div className="rounded-2xl border bg-card shadow-xl p-6 space-y-5 sticky top-6">
       <div className="flex items-baseline justify-between">
-        <span className="text-4xl font-black text-primary">${exam.price}</span>
-        <span className="text-sm text-muted-foreground line-through">${Math.round(exam.price * 1.4)}</span>
+        <div className="flex flex-col">
+            <span className="text-4xl font-black text-primary">{exam.price} ETB</span>
+            <span className="text-xs text-muted-foreground uppercase font-bold mt-1">One-time payment</span>
+        </div>
+        <span className="text-sm text-muted-foreground line-through">{Math.round(exam.price * 1.4)} ETB</span>
       </div>
 
       <div className="space-y-3">
@@ -553,11 +322,7 @@ function PurchaseCard({ exam }: { exam: (typeof EXAMS)[number] }) {
         </div>
         <div className="flex justify-between">
           <span>Questions</span>
-          <span className="text-foreground font-medium">{exam.questions}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Duration</span>
-          <span className="text-foreground font-medium">{exam.duration}</span>
+          <span className="text-foreground font-medium">60+ Total</span>
         </div>
         <div className="flex justify-between">
           <span>Access</span>

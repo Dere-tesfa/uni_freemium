@@ -23,4 +23,5 @@ export default [
     ]),
     route('auth/login', 'routes/auth/login.tsx'),
     route('auth/signup', 'routes/auth/signup.tsx'),
+    route('auth/logout', 'routes/auth/logout.tsx'),
 ] satisfies RouteConfig;

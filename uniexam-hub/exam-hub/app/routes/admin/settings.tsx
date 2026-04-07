@@ -1,11 +1,5 @@
 // Admin Settings Route
 
-import {
-  requireAdmin,
-  getFormData,
-  jsonResponse,
-  errorResponse,
-} from "~/lib/middleware";
 import { settingsService } from "~/services";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -32,7 +26,7 @@ export async function loader({ request }: { request: Request }) {
 
 // Action: Update settings
 export async function action({ request }: { request: Request }) {
-  // Authentication check removed for testing
+  const { getFormData, jsonResponse, errorResponse } = await import("~/lib/middleware.server");
 
   try {
     const formData = await getFormData(request);

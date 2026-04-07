@@ -3,6 +3,7 @@
 
 import { redirect } from 'react-router';
 import { authService } from '../services/auth.service';
+import { getSession } from './session.server';
 import type { User } from './types';
 
 /**
@@ -10,10 +11,13 @@ import type { User } from './types';
  * Throws error if not authenticated
  */
 export async function requireAuth(request: Request): Promise<Omit<User, 'password_hash'>> {
-  const authHeader = request.headers.get('Authorization');
+  const session = await getSession(request.headers.get("Cookie"));
+  const token = session.get("token") || request.headers.get('Authorization')?.replace('Bearer ', '');
   
   try {
-    const user = await authService.authenticateRequest(authHeader);
+    if (!token) throw new Error('No authentication token provided');
+    const user = await authService.getUserFromToken(token);
+    if (!user) throw new Error('Invalid or expired token');
     return user;
   } catch (error) {
     throw redirect('/auth/login?redirect=' + encodeURIComponent(new URL(request.url).pathname));
@@ -25,10 +29,13 @@ export async function requireAuth(request: Request): Promise<Omit<User, 'passwor
  * Returns null if not authenticated instead of throwing
  */
 export async function getAuthUser(request: Request): Promise<Omit<User, 'password_hash'> | null> {
-  const authHeader = request.headers.get('Authorization');
+  const session = await getSession(request.headers.get("Cookie"));
+  const token = session.get("token") || request.headers.get('Authorization')?.replace('Bearer ', '');
+  
+  if (!token) return null;
   
   try {
-    const user = await authService.authenticateRequest(authHeader);
+    const user = await authService.getUserFromToken(token);
     return user;
   } catch (error) {
     return null;
@@ -40,16 +47,19 @@ export async function getAuthUser(request: Request): Promise<Omit<User, 'passwor
  * Throws error if not authenticated or not admin
  */
 export async function requireAdmin(request: Request): Promise<Omit<User, 'password_hash'>> {
-  const authHeader = request.headers.get('Authorization');
+  const session = await getSession(request.headers.get("Cookie"));
+  const token = session.get("token") || request.headers.get('Authorization')?.replace('Bearer ', '');
   
   try {
-    const user = await authService.requireAdmin(authHeader);
-    return user;
-  } catch (error) {
-    if (error instanceof Error && error.message === 'Admin access required') {
+    if (!token) throw new Error('No authentication token provided');
+    const user = await authService.getUserFromToken(token);
+    if (!user) throw new Error('Invalid or expired token');
+    if (user.role !== 'admin') {
       throw new Response('Forbidden: Admin access required', { status: 403 });
     }
-    throw redirect('/auth/login?redirect=' + encodeURIComponent(new URL(request.url).pathname));
+    return user;
+  } catch (error) {
+    throw redirect('/admin/login');
   }
 }
 
@@ -78,58 +88,23 @@ export async function isAdmin(request: Request): Promise<boolean> {
   return user?.role === 'admin';
 }
 
-/**
- * Extract and validate JSON body from request
- */
-export async function getJsonBody<T = any>(request: Request): Promise<T> {
-  try {
-    const body = await request.json();
-    return body as T;
-  } catch (error) {
-    throw new Response('Invalid JSON body', { status: 400 });
-  }
-}
+import {
+  jsonResponse,
+  errorResponse,
+  successResponse,
+  getJsonBody,
+  getFormData,
+  validateRequired
+} from './responses';
 
-/**
- * Extract and validate form data from request
- */
-export async function getFormData(request: Request): Promise<FormData> {
-  try {
-    return await request.formData();
-  } catch (error) {
-    throw new Response('Invalid form data', { status: 400 });
-  }
-}
-
-/**
- * Create JSON response with proper headers
- */
-export function jsonResponse<T = any>(data: T, status: number = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
-
-/**
- * Create error response
- */
-export function errorResponse(message: string, status: number = 400): Response {
-  return jsonResponse({ error: message }, status);
-}
-
-/**
- * Create success response
- */
-export function successResponse<T = any>(data: T, message?: string): Response {
-  return jsonResponse({
-    success: true,
-    message,
-    data,
-  });
-}
+export {
+  jsonResponse,
+  errorResponse,
+  successResponse,
+  getJsonBody,
+  getFormData,
+  validateRequired
+};
 
 /**
  * Handle errors in loaders and actions
@@ -146,23 +121,6 @@ export function handleError(error: unknown): Response {
   }
 
   return errorResponse('An unexpected error occurred', 500);
-}
-
-/**
- * Validate required fields in data
- */
-export function validateRequired<T extends Record<string, any>>(
-  data: T,
-  fields: (keyof T)[]
-): void {
-  const missing = fields.filter(field => !data[field]);
-  
-  if (missing.length > 0) {
-    throw new Response(
-      `Missing required fields: ${missing.join(', ')}`,
-      { status: 400 }
-    );
-  }
 }
 
 /**

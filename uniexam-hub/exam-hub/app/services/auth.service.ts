@@ -8,76 +8,48 @@ import type {
   LoginDTO, 
   AuthResponse 
 } from '../lib/types';
+import jwt from 'jsonwebtoken';
 
 // In production, use proper crypto libraries
 // For now, using simple implementations
 class AuthService {
-  private JWT_SECRET = 'your-secret-key-change-in-production';
+  private JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
   private JWT_EXPIRES_IN = '7d'; // 7 days
 
   /**
-   * Hash password using a simple algorithm
-   * In production, use bcrypt or argon2
+   * Hash password using bcrypt
    */
   private async hashPassword(password: string): Promise<string> {
-    // This is a placeholder - use bcrypt in production
-    // Example: return await bcrypt.hash(password, 10);
-    return `hashed_${password}`;
+    const bcrypt = await import('bcrypt');
+    return await bcrypt.hash(password, 10);
   }
 
   /**
    * Verify password against hash
-   * In production, use bcrypt.compare
    */
   private async verifyPassword(password: string, hash: string): Promise<boolean> {
-    // This is a placeholder - use bcrypt in production
-    // Example: return await bcrypt.compare(password, hash);
-    return hash === `hashed_${password}`;
+    const bcrypt = await import('bcrypt');
+    return await bcrypt.compare(password, hash);
   }
 
   /**
    * Generate JWT token
-   * In production, use jsonwebtoken library
    */
   private generateToken(userId: string, role: string): string {
-    // This is a placeholder - use jsonwebtoken in production
-    // Example:
-    // return jwt.sign(
-    //   { userId, role },
-    //   this.JWT_SECRET,
-    //   { expiresIn: this.JWT_EXPIRES_IN }
-    // );
-    
-    const payload = {
-      userId,
-      role,
-      exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-    };
-    return `token_${Buffer.from(JSON.stringify(payload)).toString('base64')}`;
+    return jwt.sign(
+      { userId, role },
+      this.JWT_SECRET,
+      { expiresIn: this.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'] }
+    ) as string;
   }
 
   /**
    * Verify and decode JWT token
-   * In production, use jsonwebtoken library
    */
   verifyToken(token: string): { userId: string; role: string } | null {
     try {
-      // This is a placeholder - use jsonwebtoken in production
-      // Example:
-      // const decoded = jwt.verify(token, this.JWT_SECRET);
-      // return decoded as { userId: string; role: string };
-      
-      if (!token.startsWith('token_')) return null;
-      
-      const base64 = token.replace('token_', '');
-      const payload = JSON.parse(Buffer.from(base64, 'base64').toString());
-      
-      if (payload.exp < Date.now()) return null;
-      
-      return {
-        userId: payload.userId,
-        role: payload.role,
-      };
+      const decoded = jwt.verify(token, this.JWT_SECRET);
+      return decoded as { userId: string; role: string };
     } catch (error) {
       return null;
     }
@@ -131,9 +103,15 @@ class AuthService {
    */
   async login(data: LoginDTO): Promise<AuthResponse> {
     // Find user by phone
-    const user = await db.findUserByPhone(data.phone);
+    let user = await db.findUserByPhone(data.phone);
     if (!user) {
-      throw new Error('Invalid phone number or password');
+      // the front-end login form actually passes email in the `phone` field or `email` field
+      // we'll try treating data.phone as email
+      user = await db.findUserByEmail(data.phone);
+    }
+    
+    if (!user) {
+      throw new Error('Invalid credentials');
     }
 
     // Verify password

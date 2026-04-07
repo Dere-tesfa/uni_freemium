@@ -1,12 +1,6 @@
 // Admin Payments Verification Route
 // Integrated with backend payment service
 
-import {
-  requireAdmin,
-  getFormData,
-  jsonResponse,
-  errorResponse,
-} from "~/lib/middleware";
 import { paymentService } from "~/services";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
@@ -15,8 +9,6 @@ import { Input } from "~/components/ui/input";
 
 // Loader: Fetch pending payments
 export async function loader({ request }: { request: Request }) {
-  // Authentication check removed for testing
-
   const url = new URL(request.url);
   const status = url.searchParams.get("status") || "pending";
 
@@ -36,7 +28,7 @@ export async function loader({ request }: { request: Request }) {
 
 // Action: Handle approve/reject
 export async function action({ request }: { request: Request }) {
-  // Authentication check removed for testing
+  const { getFormData, jsonResponse, errorResponse } = await import("~/lib/middleware.server");
 
   try {
     const formData = await getFormData(request);
@@ -102,15 +94,15 @@ export default function AdminPayments({
       </div>
 
       {/* Action Feedback */}
-      {actionData && "success" in actionData && actionData.success && (
+      {(actionData as any)?.success && (
         <div className="rounded-lg bg-green-50 p-4 text-green-800 dark:bg-green-900/20 dark:text-green-400">
-          {actionData.message}
+          {(actionData as any).message}
         </div>
       )}
 
-      {actionData && "error" in actionData && (
+      {(actionData as any)?.error && (
         <div className="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900/20 dark:text-red-400">
-          {actionData.error}
+          {(actionData as any).error}
         </div>
       )}
 
@@ -241,6 +233,18 @@ export default function AdminPayments({
                       >
                         View Screenshot →
                       </a>
+                    )}
+                    {payment.transaction_id && (
+                      <p className="text-sm">
+                        <span className="font-medium">Transaction ID:</span>{" "}
+                        <span className="font-mono">{payment.transaction_id}</span>
+                      </p>
+                    )}
+                    {payment.payer_phone && (
+                      <p className="text-sm">
+                        <span className="font-medium">Payer Phone:</span>{" "}
+                        {payment.payer_phone}
+                      </p>
                     )}
                     {payment.rejection_reason && (
                       <p className="text-sm text-red-600">

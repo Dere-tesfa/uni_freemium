@@ -16,6 +16,7 @@ class SheetService {
   async getPublishedSheets(filters?: {
     department?: string;
     university?: string;
+    exam_type?: string;
   }): Promise<Sheet[]> {
     return await db.getAllSheets({
       ...filters,
@@ -159,8 +160,11 @@ class SheetService {
       university: data.university,
       department: data.department,
       year: data.year,
+      exam_type: data.exam_type || "mid",
+      semester: data.semester || "1",
       price: data.price,
       description: data.description,
+      image_url: data.image_url || null,
       is_published: data.is_published ?? false,
       created_at: new Date(),
       updated_at: new Date(),
